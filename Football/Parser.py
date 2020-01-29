@@ -32,8 +32,8 @@ time = re.findall("\d{2}:\d{2}", ' '.join(parsed_body.xpath('//tbody//tr//td//a/
 
 print_match()
 
-smtpObj = smtplib.SMTP('smtp..ru', 587)
+smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
 smtpObj.starttls()
-smtpObj.login('*****', '*******')
-smtpObj.sendmail("*****", "****", "go to bed!")
+smtpObj.login('test.football.dima@gmail.com', '****')
+smtpObj.sendmail("test.football.dima@gmail.com", "****", "go to bed!")
 smtpObj.quit()
