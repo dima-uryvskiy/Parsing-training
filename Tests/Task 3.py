@@ -1,11 +1,17 @@
-import requests
-import re
 from lxml import html
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 
-response = requests.get('https://www.google.com/search?q=xpath')
-parsed_body = html.fromstring(response.text)
-urls = re.findall(r'/url\?q=([a-z-A-Z-0-9:/._]+)', ' '.join(parsed_body.xpath('//div[@class="kCrYT"]//a/@href')))
-urls = re.sub(r'(\b.*\b)\1', '', ' '.join(urls)).split()  # убираю дубликаты
+driver = webdriver.Chrome(ChromeDriverManager().install())
+driver.get('https://www.google.com/search?q=xpath')
+page = driver.page_source
+parsed_body = html.fromstring(page)
+"""
+print(*parsed_body.xpath('//div[@class="r"]//a[contains(@ping,"/url?") '
+                         'and not(contains(@href,"google"))]/@href'), sep='\n')
 
-for url in range(1, len(urls) - 1, 2):
-    print(urls[url])
+"""
+
+
+print(*parsed_body.xpath('//a[contains(@ping,"/url?") '
+                         'and not(contains(@href,"google"))]/@href'), sep='\n')
