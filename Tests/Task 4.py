@@ -41,7 +41,6 @@ dict_categories = [
   }
 ]
 
-
 urls = []
 parent_id = -1
 for element in dict_categories:
@@ -50,7 +49,6 @@ for element in dict_categories:
     if element['parent_id'] == parent_id:     # выбрал нужные url
         urls.append(element['url'])
 print(*urls, sep='\n')
-
 
 ####### Если сразу знаем parent_id = 168
 
