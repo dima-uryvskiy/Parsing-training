@@ -26,7 +26,7 @@ def send_message(email_from, email_to):
 
     smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
     smtpObj.starttls()
-    smtpObj.login(email_from, '****')
+    smtpObj.login(email_from, '***')
     smtpObj.sendmail(email_from, email_to, msg.as_string())
     smtpObj.quit()
 
@@ -45,7 +45,7 @@ date = re.findall("\d{2}\.\d{2}\.\d{4}", ' '.join(parsed_body.xpath('//tbody//tr
 time = re.findall("\d{2}:\d{2}", ' '.join(parsed_body.xpath('//tbody//tr//td//a//text()')))
 
 look_match()
-send_message("test.football.dima@gmail.com", "nagrdnk2017@mail.ru")
+#send_message("test.football.dima@gmail.com", "nagrdnk2017@mail.ru")
 
 
 
