@@ -5,24 +5,31 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-def look_match():
-    response = requests.get('https://www.sports.ru/la-liga/calendar/')
-    parsed_body = html.fromstring(response.text)
-
-    time = parsed_body.xpath("//tbody/tr/td[@class=\"name-td alLeft\"]/a/text()")
-    time = [value.strip() for value in time]
-    owner_clubs = parsed_body.xpath("//tbody/tr/td[@class=\"owner-td\"]//a[@class=\"player\"]/text()")
-    guests_clubs = parsed_body.xpath("//tbody/tr/td[@class=\"guests-td\"]//a[@class=\"player\"]/text()")
-    score = parsed_body.xpath("//tbody/tr/td[@class=\"score-td\"]/a[@class=\"score\"]/noindex/b/text()")
-    index, index_t = 0, 0
+def write_in_file(title, clubs, time, score, tour):
+    index, index_s = 0, 0
     with open('timetable.txt', 'w') as fp:
-        fp.write(parsed_body.xpath('//title/text()')[0] + '\n')  # title страницы
-        while index < len(owner_clubs):
-            fp.write(parsed_body.xpath('(//h3)[1]/text()')[0] + '\n')
-            fp.write((f"Дата: {time[index_t]}  Время: {time[index_t + 1]}" if index_t < len(time) else f"Дата: {time[-2]} Время: {time[-1]}") + '\n')
-            fp.write(f"{owner_clubs[index]} {score[index]} {guests_clubs[index]}" + " \n")
-            index += 1
-            index_t += 2
+        fp.write(title[0] + '\n')
+        while index < len(clubs):
+            if index % 20 == 0:
+                fp.write('\t' + tour[index // 20] + '\n')
+            fp.write(f"Дата: {time[index]}  Время: {time[index + 1]} \n")
+            fp.write(f"\t\t{clubs[index]} {score[index_s]} {clubs[index + 1]} \n")
+            index += 2
+            index_s += 1
+
+
+def parsing():
+    response = requests.get('https://www.sports.ru/epl/calendar/')
+    parsed_body = html.fromstring(response.text)
+    title = parsed_body.xpath('//title/text()')
+    time = [value.strip() for value in parsed_body.xpath("//td[@class=\"name-td alLeft\"]/span/text() | //td[@class=\"name-td alLeft\"]/a/text()")]
+    if "перенесен" in time:
+        time.insert(time.index("перенесен") + 1, '-')
+    clubs = parsed_body.xpath("//tbody/tr/td//a[@class=\"player\"]/text()")
+    score = parsed_body.xpath("//td[@class=\"score-td\"]/a[@class=\"score\"]/noindex/b/text()")
+    tour = parsed_body.xpath('(//h3)/text()')
+    print(tour)
+    write_in_file(title, clubs, time, score, tour)
 
 
 def send_message(email_from, email_to):
@@ -38,7 +45,11 @@ def send_message(email_from, email_to):
     smtpObj.quit()
 
 
-look_match()
+
+
+
+
+parsing()
 #send_message("test.football.dima@gmail.com", "nagrdnk2017@mail.ru")
 
 
