@@ -10,5 +10,9 @@ def get_html(url):
 
 
 def get_count_pages(html):
-    soup = BeautifulSoup(html, 'lxml')
+    soup = BeautifulSoup(html, "lxml")
+    pages = soup.find("div", class_="pagination-pages clearfix").find_all("a", class_="pagination-page")
+    print(*pages, sep='\n')
 
+
+get_count_pages(get_html(start_url))
