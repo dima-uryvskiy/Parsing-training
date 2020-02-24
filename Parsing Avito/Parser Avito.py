@@ -2,6 +2,8 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 import re
+import os
+import shutil
 
 
 def get_html(url):
@@ -49,12 +51,18 @@ def print_info(num_page):
         for row in reader:
             print(', '.join(row))
 
+#  нужно спрашивать удалять ли данные
+shutil.rmtree("./products")
+os.mkdir("./products")
 
-start_url = "https://www.avito.ru/moskva/telefony?q=Iphone"
+start_url = "https://www.avito.ru/rostov-na-donu?q=холодильник+бу"
 for num in range(1, get_count_pages(get_html(start_url)) + 1):
     url_gen = start_url + f"&p={num}"
     get_page_data(get_html(url_gen))
 
 
+print("Enter number page you want look")
+print_info(int(input()))
 
+#  придумать меню  что б не качать сразу все файлы  и сделать его отдльным файлом.py
 
