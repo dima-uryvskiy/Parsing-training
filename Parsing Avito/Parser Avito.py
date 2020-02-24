@@ -2,8 +2,7 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 import re
-import os
-import shutil
+from pathlib import Path
 
 
 def get_html(url):
@@ -51,9 +50,10 @@ def print_info(num_page):
         for row in reader:
             print(', '.join(row))
 
+
 #  нужно спрашивать удалять ли данные
-shutil.rmtree("./products")
-os.mkdir("./products")
+
+[file.unlink() for file in Path("./products").glob("*")]  # удаление файлов с папки
 
 start_url = "https://www.avito.ru/rostov-na-donu?q=холодильник+бу"
 for num in range(1, get_count_pages(get_html(start_url)) + 1):
